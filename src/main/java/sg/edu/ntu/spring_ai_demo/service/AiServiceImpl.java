@@ -12,6 +12,7 @@ import org.springframework.ai.chat.client.ChatClient;
 
 import sg.edu.ntu.spring_ai_demo.model.TicketAnalysis;
 import sg.edu.ntu.spring_ai_demo.service.AiService;
+import sg.edu.ntu.spring_ai_demo.utils.PromptHelper;
 
 @Service
 public class AiServiceImpl implements AiService {
@@ -96,10 +97,6 @@ public class AiServiceImpl implements AiService {
                 this.chatClient = chatClientBuilder.build();
         }
 
-        private String getSystemPrompt(String role, String scope, String tone, String boundaries) {
-                return role + " " + scope + " " + tone + " " + boundaries;
-        }
-
         public String chat(String message) {
                 return chatClient.prompt()
                                 .user(message)
@@ -122,7 +119,10 @@ public class AiServiceImpl implements AiService {
 
         public String recommendProduct(String message) {
                 return chatClient.prompt()
-                                .system(getSystemPrompt(pdtSystemPromptRole, pdtSystemPromptScope, pdtSystemPromptTone,
+                                .system(PromptHelper.getPrompt(
+                                                pdtSystemPromptRole,
+                                                pdtSystemPromptScope,
+                                                pdtSystemPromptTone,
                                                 pdtSystemPromptBoundaries))
                                 .user(message)
                                 .call()
@@ -131,7 +131,9 @@ public class AiServiceImpl implements AiService {
 
         public String askStudyBuddy(String message) {
                 return chatClient.prompt()
-                                .system(getSystemPrompt(studySystemPromptRole, studySystemPromptScope,
+                                .system(PromptHelper.getPrompt(
+                                                studySystemPromptRole,
+                                                studySystemPromptScope,
                                                 studySystemPromptTone,
                                                 studySystemPromptBoundaries))
                                 .user(message)
@@ -141,7 +143,7 @@ public class AiServiceImpl implements AiService {
 
         public String suggestRecipe(String message) {
                 return chatClient.prompt()
-                                .system(getSystemPrompt(
+                                .system(PromptHelper.getPrompt(
                                                 recipeSystemPromptRole,
                                                 recipeSystemPromptScope,
                                                 recipeSystemPromptTone,
@@ -153,8 +155,11 @@ public class AiServiceImpl implements AiService {
 
         public String askInterviewCoach(String message) {
                 return chatClient.prompt()
-                                .system(getSystemPrompt(interviewSystemPromptRole, interviewSystemPromptScope,
-                                                interviewSystemPromptTone, interviewSystemPromptBoundaries))
+                                .system(PromptHelper.getPrompt(
+                                                interviewSystemPromptRole,
+                                                interviewSystemPromptScope,
+                                                interviewSystemPromptTone,
+                                                interviewSystemPromptBoundaries))
                                 .user(message)
                                 .call()
                                 .content();
@@ -162,8 +167,11 @@ public class AiServiceImpl implements AiService {
 
         public String summarize(String text) {
                 return chatClient.prompt()
-                                .system(getSystemPrompt(summarizerSystemPromptRole, summarizerSystemPromptScope,
-                                                summarizerSystemPromptTone, summarizerSystemPromptBoundaries))
+                                .system(PromptHelper.getPrompt(
+                                                summarizerSystemPromptRole,
+                                                summarizerSystemPromptScope,
+                                                summarizerSystemPromptTone,
+                                                summarizerSystemPromptBoundaries))
                                 .user(text)
                                 .call()
                                 .content();
